@@ -33,9 +33,7 @@ func main() {
 }
 
 func check(a []int) bool {
-	burn := []int{0, 0, 0}
-
-	if reflect.DeepEqual(a, burn) {
+	if reflect.DeepEqual(a, []int{0, 0, 0}) {
 		return true
 	}
 	return false

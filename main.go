@@ -19,15 +19,13 @@ func main() {
 		if rnd() == 0 {
 			fmt.Println("🔥燃え上がれ")
 			a = burn(a, 0)
+		} else if check(a) == false {
+			fmt.Println("💧鎮火")
+			a = burn(a, 1)
+			continue
 		} else {
-			if check(a) == false {
-				fmt.Println("💧鎮火")
-				a = burn(a, 1)
-				continue
-			} else {
-				fmt.Println("🤖ガンダム")
-				break
-			}
+			fmt.Println("🤖ガンダム")
+			break
 		}
 	}
 }

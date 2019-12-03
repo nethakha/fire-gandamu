@@ -16,7 +16,7 @@ func main() {
 	a := []int{}
 
 	for {
-		if rnd() == 0 {
+		if rnd() {
 			fmt.Println("🔥燃え上がれ")
 			a = burn(a, 0)
 		} else if check(a) == false {
@@ -45,9 +45,16 @@ func burn(a []int, b int) []int {
 	return a
 }
 
-func rnd() int64 {
+func rnd() bool {
 	seed, _ := crand.Int(crand.Reader, big.NewInt(math.MaxInt64))
 	rng := rand.New(mt19937.New())
 	rng.Seed(seed.Int64())
-	return rng.Int63n(2)
+
+	var rand int64 = rng.Int63n(2)
+
+	if rand == 1 {
+		return true
+	}
+
+	return false
 }

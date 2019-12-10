@@ -29,12 +29,14 @@ func main() {
 	}
 }
 
+// 燃え上がりチェック
 func check(a []int) bool {
 	if reflect.DeepEqual(a, []int{0, 0, 0}) {
 		return true
 	}
 	return false
 }
+
 
 func burn(a []int, b int) []int {
 	if len(a) == 3 {
@@ -44,6 +46,7 @@ func burn(a []int, b int) []int {
 	return a
 }
 
+// True or False
 func rnd() bool {
 	seed, _ := crand.Int(crand.Reader, big.NewInt(math.MaxInt64))
 	rng := rand.New(mt19937.New())

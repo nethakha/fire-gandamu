@@ -6,48 +6,84 @@ import (
 	"math"
 	"math/big"
 	"math/rand"
+	"net/http"
 	"reflect"
 
+	"flag"
 	"github.com/seehuhn/mt19937"
 )
 
-// 3回以上燃え上がったらガンダム
+type Info struct {
+	Name    string
+	Usage   string
+	Version string
+}
+
 func main() {
+	flag.Parse()
+	f := flag.Arg(0)
+
+	app := Info{
+		Name:    "Fire Gandamn",
+		Usage:   "Let's Burning",
+		Version: "0.0.1",
+	}
+
+	fmt.Println(app.Name)
+
+	switch f {
+	case "web":
+		fmt.Println("Start Web Server/n http://localhost:8080")
+		http.HandleFunc("/", Handler)
+		http.ListenAndServe(":8080", nil)
+	default:
+		fmt.Println(Logic())
+	}
+
+}
+
+func Handler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, Logic())
+}
+
+func Logic() string {
+	var result string
 	a := []int{}
 
 	for {
-		if rnd() {
-			fmt.Println("🔥燃え上がれ")
-			a = burn(a, 0)
-		} else if check(a) {
-			fmt.Println("🤖ガンダム")
+		if BurnCheck(a) {
+			result += "🤖ガンダム"
 			break
-		} else {
-			fmt.Println("💧鎮火")
-			a = burn(a, 1)
 		}
+
+		if Random() {
+			result += "🔥燃え上がれ"
+			BurnQueue(&a, 0)
+		} else {
+			result += "💧"
+			BurnQueue(&a, 1)
+		}
+
+		result += "\n"
 	}
+	return result
 }
 
-// 燃え上がりチェック
-func check(a []int) bool {
+func BurnCheck(a []int) bool {
 	if reflect.DeepEqual(a, []int{0, 0, 0}) {
 		return true
 	}
 	return false
 }
 
-
-func burn(a []int, b int) []int {
-	if len(a) == 3 {
-		a = a[1:]
+func BurnQueue(a *[]int, b int) {
+	if len(*a) == 3 {
+		*a = (*a)[1:]
 	}
-	a = append(a, b)
-	return a
+	*a = append(*a, b)
 }
 
-// True or False
-func rnd() bool {
+func Random() bool {
 	seed, _ := crand.Int(crand.Reader, big.NewInt(math.MaxInt64))
 	rng := rand.New(mt19937.New())
 	rng.Seed(seed.Int64())
